@@ -6,16 +6,17 @@ import './orderForm.css';
 
 const ADD_ORDER_URL = `${SERVER_IP}/api/add-order`
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
+const mapStateToProps = ({ auth }) => ({
+  email: auth.email,
+  token: auth.token
 })
 
 class OrderForm extends Component {
   constructor(props) {
   super(props);
     this.state = {
-    order_item: "",
-    quantity: "1"
+      order_item: "",
+      quantity: "1"
     }
   }
 
@@ -35,7 +36,7 @@ class OrderForm extends Component {
       body: JSON.stringify({
         order_item: this.state.order_item,
         quantity: this.state.quantity,
-        ordered_by: this.props.auth.email || 'Unknown!'
+        ordered_by: this.props.email || 'Unknown!'
       }),
       headers: {
         'Content-Type': 'application/json'
