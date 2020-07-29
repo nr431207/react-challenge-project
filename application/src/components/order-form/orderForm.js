@@ -12,15 +12,15 @@ const mapStateToProps = (state) => ({
 
 class OrderForm extends Component {
   constructor(props) {
-  	super(props);
+  super(props);
     this.state = {
-			order_item: "",
-			quantity: "1"
+    order_item: "",
+    quantity: "1"
     }
-	}
-	
+  }
+
   menuItemChosen(event) {
-  	this.setState({ order_item: event.target.value });
+    this.setState({ order_item: event.target.value });
   }
 
   menuQuantityChosen(event) {
@@ -33,13 +33,13 @@ class OrderForm extends Component {
     fetch(ADD_ORDER_URL, {
       method: 'POST',
       body: JSON.stringify({
-      order_item: this.state.order_item,
-      quantity: this.state.quantity,
-      ordered_by: this.props.auth.email || 'Unknown!',
-    }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
+        order_item: this.state.order_item,
+        quantity: this.state.quantity,
+        ordered_by: this.props.auth.email || 'Unknown!'
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
     .then(res => res.json())
     .then(response => console.log("Success", JSON.stringify(response)))
@@ -47,7 +47,7 @@ class OrderForm extends Component {
   }
 
   render() {
-		const { order_item, quantity, _id, isEdit, menuQuantityChosen, menuItemChosen, submitOrder } = this.props;
+    const { order_item, quantity, _id, isEdit, menuQuantityChosen, menuItemChosen, submitOrder } = this.props;
     return (
       <Template>
         <div className="form-wrapper">
@@ -69,7 +69,7 @@ class OrderForm extends Component {
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
-							<option value="4">4</option>
+              <option value="4">4</option>
               <option value="5">5</option>
               <option value="6">6</option>
             </select>

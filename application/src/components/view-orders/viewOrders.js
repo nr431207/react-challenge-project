@@ -10,153 +10,152 @@ const DELETE_ORDER_URL = `${SERVER_IP}/api/delete-order`;
 const EDIT_ORDER_URL = `${SERVER_IP}/api/edit-order`;
 
 class ViewOrders extends Component {
-	state = {
-		orders: [],
-		order: {},
-		isEdit: false,
-	}
-
-	fetchData = async() => {
-		try {
-			const response = await fetch(`${SERVER_IP}/api/current-orders`);
-			const json = await response.json();
-			if(json.success) {
-				this.setState({ orders: json.orders });
+  state = {
+    orders: [],
+    order: {},
+    isEdit: false,
+  }
+  
+  fetchData = async() => {
+    try {
+      const response = await fetch(`${SERVER_IP}/api/current-orders`);
+      const json = await response.json();
+      if(json.success) {
+        this.setState({ orders: json.orders });
       } else {
-				console.log('Error getting orders');
-			}
-		} catch (error) {
-			console.log('Error: ', error);
-		}
-	}
+        console.log('Error getting orders');
+      }
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  }
 
   componentDidMount = () => {
-		this.fetchData();
+    this.fetchData();
   }
 
   menuItemChosen = event => {
-    this.setState({ 
-			order : {
-				...this.state.order,
-				order_item : event.target.value
-			} 
-		});
+    this.setState({
+      order : {
+        ...this.state.order,
+        order_item : event.target.value
+      }
+    });
   }
 
   menuQuantityChosen = event => {
-    this.setState({ 
-			order : {
-				...this.state.order,
-				quantity : event.target.value
-			} 
-		});
-	}
-		
-	toggleEditMode = event => {
-		this.setState({ isEdit: true });
-		const filteredOrder = this.state.orders.filter(order => order._id === event.target.value)[0];
-		const { order_item, quantity, _id } = filteredOrder;
-		this.setState({
-			order : {
-				order_item,
-				quantity,
-				_id
-			}
-		})
-	}
+    this.setState({
+      order : {
+        ...this.state.order,
+        quantity : event.target.value
+      }
+    });
+  }
+
+  toggleEditMode = event => {
+    this.setState({ isEdit: true });
+    const filteredOrder = this.state.orders.filter(order => order._id === event.target.value)[0];
+    const { order_item, quantity, _id } = filteredOrder;
+    this.setState({
+      order : {
+        order_item,
+        quantity,
+        _id
+      }
+    })
+  }
 
   submitOrder = async(event) => {
-		if(!this.state.isEdit) {
-			const { order_item, quantity } = this.state.order
-    	event.preventDefault();
-			if (order_item === "") return;
-			try {
-				const response = await fetch(ADD_ORDER_URL, {
-					method: 'POST',
-					body: JSON.stringify({
-						order_item: order_item,
-						quantity: quantity,
-						ordered_by: this.props.auth.email || 'Unknown!',
-					}),
-					headers: {
-						'Content-Type': 'application/json'
-					}
-				});
-				const json = await response.json();
-				if(json.success) {
-					this.setState({ isEdit: false });
-					this.fetchData()
-				} else {
-					console.log('error posting orders')
-				}
-			} catch (error) {
-				console.log('Error: ', error);
-			}
-    
-		} else {
-				const { order_item, quantity, _id } = this.state.order;
-				try {
-					const response = await fetch(EDIT_ORDER_URL, {
-						method: 'POST',
-						body: JSON.stringify({
-							id: _id,
-							order_item: order_item,
-							quantity: quantity,
-							ordered_by: this.props.auth.email || 'Unknown!',
-						}),
-						headers: {
-							'Content-Type': 'application/json'
-						}
-					});
-					const json = await response.json();
-					if(json.success) {
-						this.setState({ isEdit: false });
-						this.fetchData();
-					} else {
-						console.log('error posting orders')
-					}
-				} catch (error) {
-					console.log('Error: ', error);
-				}				
-		 }				
+    if(!this.state.isEdit) {
+      const { order_item, quantity } = this.state.order
+      event.preventDefault();
+      if (order_item === "") return;
+      try {
+        const response = await fetch(ADD_ORDER_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            order_item: order_item,
+            quantity: quantity,
+            ordered_by: this.props.auth.email || 'Unknown!',
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const json = await response.json();
+        if(json.success) {
+          this.setState({ isEdit: false });
+          this.fetchData()
+        } else {
+          console.log('error posting orders')
+        }
+      } catch (error) {
+        console.log('Error: ', error);
+      }
+    } else {
+      const { order_item, quantity, _id } = this.state.order;
+      try {
+        const response = await fetch(EDIT_ORDER_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            id: _id,
+            order_item: order_item,
+            quantity: quantity,
+            ordered_by: this.props.auth.email || 'Unknown!',
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const json = await response.json();
+        if(json.success) {
+          this.setState({ isEdit: false });
+          this.fetchData();
+        } else {
+          console.log('error posting orders')
+        }
+      } catch (error) {
+        console.log('Error: ', error);
+      }
+    }
   }
 
   handleDelete = async(e) => {
-		let id = e.target.value;
-		try {
-			const response = await fetch(DELETE_ORDER_URL, {
-				method: 'POST',
-				body: JSON.stringify({ id }),
-				headers: {
-					'Content-Type': 'application/json',
-					}       
-				});
-			const json = await response.json();
-			if(json.success) {
-				this.fetchData();
-			} else {
-				console.log('error deleting order')
-			}
-		} catch(error) {
-			console.log('Error: ', error);
-		}
-	}
+    let id = e.target.value;
+    try {
+      const response = await fetch(DELETE_ORDER_URL, {
+        method: 'POST',
+        body: JSON.stringify({ id }),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      const json = await response.json();
+      if(json.success) {
+        this.fetchData();
+      } else {
+        console.log('error deleting order')
+      }
+    } catch(error) {
+      console.log('Error: ', error);
+    }
+  }
 
   render() {
-		const { isEdit, order, orders } = this.state 
+    const { isEdit, order, orders } = this.state 
     if(isEdit) return (
-			<OrderForm
-				order_item={order.order_item}
-				quantity={order.quantity}
-				_id={order._id}
-				menuItemChosen={this.menuItemChosen}
-				menuQuantityChosen={this.menuQuantityChosen}
-				submitOrder={this.submitOrder}
-				isEdit={isEdit}
-      />
+      <OrderForm
+        order_item={order.order_item}
+        quantity={order.quantity}
+        _id={order._id}
+        menuItemChosen={this.menuItemChosen}
+        menuQuantityChosen={this.menuQuantityChosen}
+        submitOrder={this.submitOrder}
+        isEdit={isEdit}
+     />
     )
     return (
-			<Template>
+    <Template>
         <div className="container-fluid">
         {orders.map(order => {
           const createdDate = new Date(order.createdAt);
@@ -184,7 +183,7 @@ class ViewOrders extends Component {
 }
 
 const mapStateToProps = ({ auth }) => ({
-	auth
+  auth
 })
 
 export default connect(mapStateToProps, null)(ViewOrders);
