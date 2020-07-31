@@ -6,17 +6,17 @@ import './orderForm.css';
 
 const ADD_ORDER_URL = `${SERVER_IP}/api/add-order`
 
-const mapStateToProps = (state) => ({
-    auth: state.auth,
+const mapStateToProps = ({ auth }) => ({
+  email: auth.email,
+  token: auth.token
 })
 
 class OrderForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            order_item: "",
-            quantity: "1"
-        }
+  constructor(props) {
+  super(props);
+    this.state = {
+      order_item: "",
+      quantity: "1"
     }
 
     menuItemChosen(event) {
@@ -27,24 +27,24 @@ class OrderForm extends Component {
         this.setState({ quantity: event.target.value });
     }
 
-    submitOrder(event) {
-        event.preventDefault();
-        if (this.state.order_item === "") return;
-        fetch(ADD_ORDER_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                order_item: this.state.order_item,
-                quantity: this.state.quantity,
-                ordered_by: this.props.auth.email || 'Unknown!',
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(response => console.log("Success", JSON.stringify(response)))
-        .catch(error => console.error(error));
-    }
+  submitOrder(event) {
+    event.preventDefault();
+    if (this.state.order_item === "") return;
+    fetch(ADD_ORDER_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        order_item: this.state.order_item,
+        quantity: this.state.quantity,
+        ordered_by: this.props.email || 'Unknown!'
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(response => console.log("Success", JSON.stringify(response)))
+    .catch(error => console.error(error));
+  }
 
     render() {
         return (
