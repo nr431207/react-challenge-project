@@ -33,7 +33,7 @@ class ViewOrders extends Component {
                                     <p>Ordered by: {order.ordered_by || ''}</p>
                                 </div>
                                 <div className="col-md-4 d-flex view-order-middle-col">
-                                    <p>Order placed at {`${createdDate.getHours()}:${createdDate.getMinutes()}:${createdDate.getSeconds()}`}</p>
+                                    <p>Order placed at {`${createdDate.toLocaleTimeString('it-IT')}`}</p>
                                     <p>Quantity: {order.quantity}</p>
                                  </div>
                                  <div className="col-md-4 view-order-right-col">
@@ -47,6 +47,6 @@ class ViewOrders extends Component {
             </Template>
         );
     }
-}
+  }
 
 export default ViewOrders;
