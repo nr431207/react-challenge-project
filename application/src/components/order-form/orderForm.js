@@ -21,7 +21,6 @@ class OrderForm extends Component {
 
   menuItemChosen(event) {
     this.setState({ order_item: event.target.value });
-  }
 
   menuQuantityChosen(event) {
     this.setState({ quantity: event.target.value });
